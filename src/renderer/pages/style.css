@@ -1,0 +1,10 @@
+path {
+  shape-rendering: auto;
+}
+
+.simple-keyboard {
+  position: absolute;
+  top: 55vh;
+  width: 90%;
+  left: 5%;
+}
