@@ -1,5 +1,5 @@
 /* eslint-disable react/button-has-type */
-import { useHistory } from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router-dom';
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import Keyboard from 'simple-keyboard';
 import arabicLayout from 'simple-keyboard-layouts/build/layouts/arabic';
@@ -8,8 +8,15 @@ import 'simple-keyboard/build/css/index.css';
 import BackImage from '../../../assets/back/back_2_1.svg';
 import './style.css';
 
+const useQuery = () => {
+  return new URLSearchParams(useLocation().search);
+};
+
 export default function PersonalizationPage() {
   const history = useHistory();
+  const query = useQuery();
+  const firstText = query.get('first_text'); // e.g. ?name=John
+
   const keyboardRef = useRef<Keyboard | null>(null);
   const keyboardContainerRef = useRef<HTMLDivElement | null>(null);
   const [input, setInput] = useState('');
@@ -18,15 +25,17 @@ export default function PersonalizationPage() {
   const handleEnterKey = useCallback(
     (value: string) => {
       try {
-        fetch(`${process.env.REACT_APP_API_BASE_URL}/api/print`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ name: value }),
-        });
-
-        history.push('/processing');
+        // fetch(`${process.env.REACT_APP_API_BASE_URL}/api/print`, {
+        //   method: 'POST',
+        //   headers: {
+        //     'Content-Type': 'application/json',
+        //   },
+        //   body: JSON.stringify({ name: value }),
+        // });
+        if(firstText !== null && firstText !== undefined)
+          history.push(`/processing?first_text=${firstText}&second_text=${value}`);
+        else
+          history.push(`/confirmmore?first_text=${value}`);
       } catch (error) {
         console.log(error);
       }

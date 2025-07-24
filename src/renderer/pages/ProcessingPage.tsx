@@ -1,13 +1,29 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
-import { useHistory } from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router-dom';
 import BackImage from '../../../assets/back/back_1.svg';
 import ButtonImage from '../../../assets/images/but_ready.svg';
 import CircleImage from '../../../assets/images/Circle.png';
 import BG_OverLay from '../../../assets/back/back_3_overlay.svg';
 
+const useQuery = () => {
+  return new URLSearchParams(useLocation().search);
+};
+
 export default function ProcessingPage() {
   const history = useHistory();
+  const query = useQuery();
+  const firstText = query.get('first_text'); // e.g. ?name=John
+  const secondText = query.get('second_text'); // e.g. ?name=<John>
+
+  fetch(`${process.env.REACT_APP_API_BASE_URL}/api/print`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ first_name: firstText, second_name: secondText }),
+  });
+
   const handleProcess = () => {
     history.push('/');
   };
