@@ -4,6 +4,7 @@ import webpack from 'webpack';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 import chalk from 'chalk';
 import { merge } from 'webpack-merge';
+import Dotenv from 'dotenv-webpack';
 import { spawn, execSync } from 'child_process';
 import baseConfig from './webpack.config.base';
 import webpackPaths from './webpack.paths';
@@ -26,8 +27,7 @@ const requiredByDLLConfig = module.parent.filename.includes(
  * Warn if the DLL is not built
  */
 if (
-  !requiredByDLLConfig &&
-  !(fs.existsSync(webpackPaths.dllPath) && fs.existsSync(manifest))
+  !requiredByDLLConfig && !(fs.existsSync(webpackPaths.dllPath) && fs.existsSync(manifest))
 ) {
   console.log(
     chalk.black.bgYellow.bold(
@@ -137,6 +137,7 @@ export default merge(baseConfig, {
         }),
 
     new webpack.NoEmitOnErrorsPlugin(),
+    new Dotenv(), // 👈 injects .env into renderer
 
     /**
      * Create global constants which can be configured at compile time.
@@ -181,6 +182,8 @@ export default merge(baseConfig, {
   },
 
   devServer: {
+    host: '0.0.0.0',
+    allowedHosts: 'all',
     port,
     compress: true,
     hot: true,

@@ -18,7 +18,7 @@ export default function PersonalizationPage() {
   const handleEnterKey = useCallback(
     (value: string) => {
       try {
-        fetch('http://localhost:3000/api/print', {
+        fetch(`${process.env.REACT_APP_API_BASE_URL}/api/print`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
